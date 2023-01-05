@@ -27,6 +27,10 @@ class Error:
         sys.exit(0)
 
     @staticmethod
-    def throw(level, type, msg):
+    def print(level, type, msg):
         print(f"\n\t{level}[{type}] -> {Error.ENDC}{msg}\n")
+
+    @staticmethod
+    def throw(level, type, msg):
+        Error.print(level, type, msg)
         sys.exit(0)
