@@ -22,8 +22,9 @@ class Error:
     KEYBOARD_INTERRUPT_ERROR = "KeyboardInterruptError"
 
     @staticmethod
-    def print_error(msg):
-        print(msg)
+    def print_error(*msg):
+        for m in msg:
+            print(m)
         sys.exit(0)
 
     @staticmethod
