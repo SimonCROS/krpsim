@@ -32,4 +32,5 @@ if __name__ == '__main__':
     processes, start = parser.parse(args.file)
 
     population = generate_population(args, start, processes, memoization)
-    population = evolve(population, start, processes, args)
+    print_candidates_stock(population)
+    # population = evolve(population, start, processes, args)
