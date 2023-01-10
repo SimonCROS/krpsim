@@ -4,6 +4,7 @@ import src.parsing as parser
 
 from src.generate_population import generate_population
 from src.GeneticSolver import evolve
+from src.Error import Error
 
 if __name__ == '__main__':
     argparse = a.ArgumentParser()
@@ -11,7 +12,7 @@ if __name__ == '__main__':
     argparse.add_argument("-p", "--population", default=26, type=int, help="chromosome number for the genetic algo")
     argparse.add_argument("-i", "--iterations", default=1000, type=int,
                           help="maximum iterations while generating a chromosome")
-    argparse.add_argument("-g", "--generations", default=100, type=int, help="generations number")
+    argparse.add_argument("-g", "--generations", default=10, type=int, help="generations number")
     argparse.add_argument("-r", "--ratio", default=5, type=int, help="mutation ratio")
     args = argparse.parse_args()
 
@@ -19,11 +20,11 @@ if __name__ == '__main__':
         argparse.error('[-p] has range(1, 1000)')
     elif int(args.population) % 2:
         argparse.error('[-p] has to be odd')
-    elif int(args.iterations) < 1 or int(args.iterations) > 1000000:
-        argparse.error('[-i] has range(1, 1000000)')
-    elif int(args.generations) < 1 or int(args.generations) > 10000:
-        argparse.error('[-g] has range(1, 10000)')
-    elif int(args.ratio) < 1 or int(args.ratio) > 25:
+    elif int(args.iterations) < 1 or int(args.iterations) > 100_000_000:
+        argparse.error('[-i] has range(1, 100 000 000)')
+    elif int(args.generations) < 1 or int(args.generations) > 10_000:
+        argparse.error('[-g] has range(1, 100)')
+    elif int(args.ratio) < 2 or int(args.ratio) > 25:
         argparse.error('[-r] has range(1, 25)')
 
     memoization: dict[tuple[int]: tuple[tuple[int, tuple[int]]]] = {}
@@ -31,4 +32,3 @@ if __name__ == '__main__':
 
     population = generate_population(args, start, processes, memoization)
     population = evolve(population, start, processes, args)
-

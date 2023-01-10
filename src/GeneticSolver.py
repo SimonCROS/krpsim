@@ -91,4 +91,5 @@ def evolve(population: list[Candidate], start: Candidate, processes: list[Proces
         __crossover(population, start, processes)
         __mutation(population, start, processes, args)
         population = __select_chromosomes(population, args.population)
+    print_population(population)
     return population

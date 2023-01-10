@@ -52,14 +52,16 @@ def __remove_comment(line) -> str:
     return lhs
 
 
-def __convert_resources(converter: dict[str: int], resources: dict[str: str] | None) -> tuple[int]:
+def __convert_resources(resources: dict[str: str] | None) -> tuple[int]:
+    converter = copy.deepcopy(Candidate.converter)
+
     if resources:
         for k, v in resources.items():
             converter[k] = int(v)
     return tuple(converter.values())
 
 
-def __get_resources_converter(goal: set[str], stock: set[str]) -> dict[str: int]:
+def __set_candidate_converter(goal: set[str], stock: set[str]):
     converter: dict[str: int] = {}
     optimize: str = goal.intersection(stock).pop()
     stock: list[str] = list(stock)
@@ -69,17 +71,17 @@ def __get_resources_converter(goal: set[str], stock: set[str]) -> dict[str: int]
         converter[s] = 0
     converter[optimize] = 0
 
-    return converter
+    Candidate.converter = converter
 
 
-def __get_processes(converter: dict[str: int], processes: list[dict]):
+def __get_processes(processes: list[dict]):
     Processes: list[Process] = []
 
     for process in processes:
         Processes.append(Process(
             name=process['name'],
-            cost=__convert_resources(copy.deepcopy(converter), process['cost']),
-            gain=__convert_resources(copy.deepcopy(converter), process['gain']),
+            cost=__convert_resources(process['cost']),
+            gain=__convert_resources(process['gain']),
             delay=int(process['delay'])
         ))
     return Processes
@@ -117,8 +119,8 @@ def parse(file) -> list[list[Process], Candidate]:
                     Error.print(Error.FAIL, Error.FILE_FORMAT_ERROR,
                                 f"file format error: unknown patterm : '{item}'")
 
-    converter = __get_resources_converter(goal, stock)
-    processes = __get_processes(converter, processes)
-    start = Candidate([], __convert_resources(converter, start), 0)
+    __set_candidate_converter(goal, stock)
+    processes = __get_processes(processes)
+    start = Candidate([], __convert_resources(start), 0)
 
     return [processes, start]
