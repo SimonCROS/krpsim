@@ -11,4 +11,4 @@ class Candidate:
         self.duration = 0
 
     def __str__(self):
-        return f"{self.process} - {self.stock} - {self.fitness} - {self.duration}"
+        return f"{len(self.process)} - {self.stock} - {self.fitness} - {self.duration}"

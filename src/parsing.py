@@ -1,5 +1,5 @@
-import regex
 import copy
+import regex
 
 from src.Error import Error
 from src.Candidate import Candidate
