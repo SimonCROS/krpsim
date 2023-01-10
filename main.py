@@ -2,9 +2,10 @@ import argparse as a
 
 import src.parsing as parser
 
-from src.generate_population import generate_population
-from src.GeneticSolver import evolve
 from src.Error import Error
+from src.GeneticSolver import evolve
+from src.generate_population import generate_population
+from src.utils import print_collection, print_candidates_stock
 
 if __name__ == '__main__':
     argparse = a.ArgumentParser()

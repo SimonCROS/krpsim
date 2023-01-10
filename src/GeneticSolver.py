@@ -7,7 +7,6 @@ from src.Process import Process
 from src.utils import tup_sub, tup_add
 from src.generate_population import is_doable, get_doable_processes, do_process
 
-from src.utils import print_population
 from src.Error import Error
 
 
@@ -91,5 +90,4 @@ def evolve(population: list[Candidate], start: Candidate, processes: list[Proces
         __crossover(population, start, processes)
         __mutation(population, start, processes, args)
         population = __select_chromosomes(population, args.population)
-    print_population(population)
     return population
