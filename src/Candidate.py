@@ -13,10 +13,8 @@ class Candidate:
         self.duration = 0
 
     def __str__(self):
-        return f"{len(self.process)} - {self.stock} - {self.fitness} - {self.duration}"
-
-    def show_stock(self):
-        output: list = []
+        s: list[str] = []
         for key, stock in zip(Candidate.converter, self.stock):
-            output.append(f"{key}: {stock}")
-        print(" | ".join(output))
+            s.append(f"{key}:{stock}")
+        return f"{len(self.process)} - ({' ; '.join(s)}) - {self.fitness} - {self.duration}"
+

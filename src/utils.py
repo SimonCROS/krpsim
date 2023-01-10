@@ -8,11 +8,6 @@ def print_collection(collection: list[Candidate | Process]):
         print(elem)
 
 
-def print_candidates_stock(population: list[Candidate]):
-    for chromosome in population:
-        chromosome.show_stock()
-
-
 def tup_sub(a: tuple[int], b: tuple[int]) -> tuple[int]:
     return tuple(map(sub, a, b))
 

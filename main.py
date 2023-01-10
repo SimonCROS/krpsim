@@ -5,7 +5,7 @@ import src.parsing as parser
 from src.Error import Error
 from src.GeneticSolver import evolve
 from src.generate_population import generate_population
-from src.utils import print_collection, print_candidates_stock
+from src.utils import print_collection
 
 if __name__ == '__main__':
     argparse = a.ArgumentParser()
@@ -32,5 +32,6 @@ if __name__ == '__main__':
     processes, start = parser.parse(args.file)
 
     population = generate_population(args, start, processes, memoization)
-    print_candidates_stock(population)
-    # population = evolve(population, start, processes, args)
+    population = evolve(population, start, processes, args)
+    print_collection(population)
+    print_collection(processes)
