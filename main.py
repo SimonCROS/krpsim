@@ -35,5 +35,5 @@ if __name__ == '__main__':
     population = evolve(population, start, processes, args)
     if args.demo:
         print_collection(population)
-    print_cycle(population[0], processes)
+    print_cycle(population[0], processes, pb_type)
 

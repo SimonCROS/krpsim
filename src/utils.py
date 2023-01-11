@@ -9,12 +9,24 @@ def print_collection(collection: list[Candidate | Process]):
     print("")
 
 
-def print_cycle(chromosome: Candidate, processes: list[Process]):
+def print_stock(stock: tuple[int]):
+    print("\tStock:")
+    for key, stock in zip(Candidate.converter, stock):
+        print(f"\t - {key} => {stock}")
+    print("")
+
+
+def print_cycle(chromosome: Candidate, processes: list[Process], pb_type: int):
     duration = 0
+    print(f"\n\t{len(processes)} processes, {len(chromosome.stock)} stocks, 1 to optimize\n")
     for i in chromosome.process:
-        print(f"{duration}:{processes[i].name}")
+        print(f"\t{duration}:{processes[i].name}")
         duration += processes[i].delay
-    print(f"No more process doable at time {duration + 1}")
+    if pb_type == 1:
+        print(f"\n\tSustainable system stopped at time {duration + 1}\n")
+    else:
+        print(f"\n\tNo more process doable at time {duration + 1}\n")
+    print_stock(chromosome.stock)
 
 
 def tup_sub(a: tuple[int], b: tuple[int]) -> tuple[int]:
