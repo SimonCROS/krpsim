@@ -87,7 +87,7 @@ def __get_processes(processes: list[dict]):
     return Processes
 
 
-def parse(file) -> list[list[Process], Candidate]:
+def parse(file) -> list[list[Process], Candidate, int]:
     content = __get_file_content(file)
     content = map(__remove_comment, content)
     content = filter(None, content)
@@ -123,4 +123,4 @@ def parse(file) -> list[list[Process], Candidate]:
     processes = __get_processes(processes)
     start = Candidate([], __convert_resources(start), 0)
 
-    return [processes, start]
+    return [processes, start, len(goal)]

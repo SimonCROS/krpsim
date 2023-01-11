@@ -14,19 +14,19 @@ def __fitness(chromosome: Candidate):
     if chromosome.stock[-1] == 0:
         chromosome.fitness = 0
         return chromosome.fitness
-    chromosome.fitness = chromosome.stock[-1] * 100000 - chromosome.duration
+    chromosome.fitness = chromosome.stock[-1] * 100_000_000 - chromosome.duration
     return chromosome.fitness
+
+
+def __select_chromosomes(population: list[Candidate], population_size: int) -> list[Candidate]:
+    # we are performing elitism when sorting population and children obtained by crossover
+    return sorted(population, key=lambda chromosome: __fitness(chromosome), reverse=True)[:population_size]
 
 
 def __do_process(chromosome: Candidate, new_stock: tuple, process: Process, process_nb):
     chromosome.process.append(process_nb)
     chromosome.stock = tup_add(new_stock, process.gain)
     chromosome.duration += process.delay
-
-
-def __select_chromosomes(population: list[Candidate], population_size: int) -> list[Candidate]:
-    # we are performing elitism when sorting population and children obtained by crossover
-    return sorted(population, key=lambda chromosome: __fitness(chromosome), reverse=True)[:population_size]
 
 
 def __cross(chromosome: Candidate, processes_list: list[int], processes: list[Process]) -> Candidate:
