@@ -17,4 +17,3 @@ class Candidate:
         for key, stock in zip(Candidate.converter, self.stock):
             s.append(f"{key}:{stock}")
         return f"{len(self.process)} - ({';'.join(s[:-1])}) - ({s[-1]}) - {self.fitness} - {self.duration}"
-
