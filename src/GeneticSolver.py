@@ -7,8 +7,6 @@ from src.Process import Process
 from src.utils import tup_sub, tup_add
 from src.generate_population import is_doable, get_doable_processes, apply_node
 
-from src.Error import Error
-
 
 def __fitness(chromosome: Candidate):
     if chromosome.stock[-1] == 0:

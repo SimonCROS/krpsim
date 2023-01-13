@@ -8,14 +8,12 @@ from operator import sub, add
 def print_collection(collection: list[Candidate | Process]):
     for elem in collection:
         print(elem)
-    print("")
 
 
 def print_stock(stock: tuple[int]):
     print("\tStock:")
     for key, stock in zip(Candidate.converter, stock):
         print(f"\t - {key} => {stock}")
-    print("")
 
 
 def print_cycle(chromosome: Candidate, processes: list[Process], pb_type: int, start: Candidate):
