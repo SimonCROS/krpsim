@@ -35,7 +35,10 @@ def apply_node(chromosome: Candidate, node: Node):
     chromosome.duration += node.delay
 
 
-def __rewind(chromosome: Candidate, processes: list[Process], memoization: dict[tuple[int]: Node]) -> tuple[int]:
+"""
+Rewind to the previous step for the chromosome, and returns if there are other possibilities avaliables.
+"""
+def __rewind(chromosome: Candidate, processes: list[Process], memoization: dict[tuple[int]: Node]) -> int:
     last_process_id = chromosome.process.pop()
     chromosome.stock = tup_add(
         tup_sub(chromosome.stock, processes[last_process_id].gain),
