@@ -5,7 +5,7 @@ import random
 from src.Candidate import Candidate
 from src.Process import Process
 from src.utils import tup_sub, tup_add
-from src.generate_population import is_doable, get_doable_processes, do_process
+from src.generate_population import is_doable, get_doable_processes, apply_node
 
 from src.Error import Error
 
@@ -14,7 +14,8 @@ def __fitness(chromosome: Candidate):
     if chromosome.stock[-1] == 0:
         chromosome.fitness = 0
         return chromosome.fitness
-    chromosome.fitness = chromosome.stock[-1] * 100_000_000 - chromosome.duration
+    chromosome.fitness = chromosome.stock[-1] * \
+        100_000_000 - chromosome.duration
     return chromosome.fitness
 
 
@@ -45,9 +46,12 @@ def __crossover(population: list[Candidate], start: Candidate, processes: list[P
         chromosome_a: Candidate = copy.deepcopy(start)
         chromosome_b: Candidate = copy.deepcopy(start)
 
-        cross_point = random.choice(range(1, min([len(population[i].process), len(population[i + 1].process)])))
-        cross_process_a = population[i].process[:cross_point] + population[i + 1].process[cross_point:]
-        cross_process_b = population[i + 1].process[:cross_point] + population[i].process[cross_point:]
+        cross_point = random.choice(
+            range(1, min([len(population[i].process), len(population[i + 1].process)])))
+        cross_process_a = population[i].process[:cross_point] + \
+            population[i + 1].process[cross_point:]
+        cross_process_b = population[i + 1].process[:cross_point] + \
+            population[i].process[cross_point:]
 
         population.append(__cross(chromosome_a, cross_process_a, processes))
         population.append(__cross(chromosome_b, cross_process_b, processes))
@@ -56,31 +60,36 @@ def __crossover(population: list[Candidate], start: Candidate, processes: list[P
 def __mutate(mutable: Candidate, mutated: Candidate, processes: list[Process], ratio: int, mutation_point) -> Candidate:
     for i in range(0, mutation_point - 1):
         new_stock = tup_sub(mutated.stock, processes[mutable.process[i]].cost)
-        __do_process(mutated, new_stock, processes[mutable.process[i]], mutable.process[i])
+        __do_process(mutated, new_stock,
+                     processes[mutable.process[i]], mutable.process[i])
 
     for i in range(mutation_point, mutation_point + ratio):
         doable = get_doable_processes(mutated, processes)
         if not doable:
             return mutable
-        do_process(mutated, random.choice(doable))
+        apply_node(mutated, random.choice(doable))
 
     for i in range(mutation_point + ratio, len(mutable.process)):
         new_stock = tup_sub(mutated.stock, processes[mutable.process[i]].cost)
         if not is_doable(new_stock):
             return mutable
-        __do_process(mutated, new_stock, processes[mutable.process[i]], mutable.process[i])
+        __do_process(mutated, new_stock,
+                     processes[mutable.process[i]], mutable.process[i])
     return mutated
 
 
 def __mutation(population: list[Candidate], start: Candidate, processes: list[Process], args) -> list[Candidate]:
     for i in range(args.population, args.population * 2):
-        ratio: int = math.floor(len(population[i].process) * (random.choice(range(1, args.ratio)) / 100))
+        ratio: int = math.floor(
+            len(population[i].process) * (random.choice(range(1, args.ratio)) / 100))
         if ratio == 0:
             continue
-        mutation_point: int = random.choice(range(0, len(population[i].process) - ratio - 1))
+        mutation_point: int = random.choice(
+            range(0, len(population[i].process) - ratio - 1))
         mutated: Candidate = copy.deepcopy(start)
 
-        population[i] = __mutate(population[i], mutated, processes, ratio, mutation_point)
+        population[i] = __mutate(
+            population[i], mutated, processes, ratio, mutation_point)
 
 
 def evolve(population: list[Candidate], start: Candidate, processes: list[Process], args) -> list[Candidate]:

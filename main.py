@@ -2,7 +2,6 @@ import argparse as a
 
 import src.parsing as parser
 
-from src.Error import Error
 from src.GeneticSolver import evolve
 from src.generate_population import generate_population
 from src.utils import print_collection, print_cycle
@@ -19,11 +18,11 @@ if __name__ == '__main__':
     args = argparse.parse_args()
 
     if args.population < 1 or args.population > 1000:
-        argparse.error('[-p] has range(1, 1000)')
+        argparse.error('[-p] has range(2, 1000)')
     elif args.population % 2:
         argparse.error('[-p] has to be odd')
-    elif args.iterations < 1 or args.iterations > 1_000_000:
-        argparse.error('[-i] has range(1, 1 000 000)')
+    elif args.iterations < 2 or args.iterations > 1_000_000:
+        argparse.error('[-i] has range(2, 1 000 000)')
     elif args.generations < 1 or args.generations > 100:
         argparse.error('[-g] has range(1, 100)')
     elif args.ratio < 2 or args.ratio > 25:

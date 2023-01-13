@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 import regex
 
@@ -35,11 +37,11 @@ def __to_resources(item: str, stock: set) -> dict[str: int]:
     parts = item.split(';')
     for part in parts:
         if not part:
-            Error.print(Error.FAIL, Error.FILE_FORMAT_ERROR,
+            Error.throw(Error.FAIL, Error.FILE_FORMAT_ERROR,
                         f"file format error: empty resource : '{part}' in '({item})'")
         kv = part.split(':')
         if len(kv) != 2 or not len(kv[0]) or not len(kv[1]):
-            Error.print(Error.FAIL, Error.FILE_FORMAT_ERROR,
+            Error.throw(Error.FAIL, Error.FILE_FORMAT_ERROR,
                         f"file format error: resource bad format (`key:value` required) : '{part}' in '({item})'")
         resources[kv[0]] = kv[1]
         stock.add(kv[0])
@@ -103,7 +105,8 @@ def parse(file) -> list[list[Process], Candidate, int]:
             stock.add(result.group(1))
             start[result.group(1)] = result.group(2)
         else:
-            result = regex.search(r"^([^:]+):((?:(?=\()[^)]*\))?):((?=\()[^)]*\))?:(\d+)$", item)
+            result = regex.search(
+                r"^([^:]+):((?:(?=\()[^)]*\))?):((?=\()[^)]*\))?:(\d+)$", item)
             if result:
                 processes.append({
                     'name': result.group(1),
@@ -116,7 +119,7 @@ def parse(file) -> list[list[Process], Candidate, int]:
                 if result:
                     goal.update(result.group(2)[1:-1].split(';'))
                 else:
-                    Error.print(Error.FAIL, Error.FILE_FORMAT_ERROR,
+                    Error.throw(Error.FAIL, Error.FILE_FORMAT_ERROR,
                                 f"file format error: unknown patterm : '{item}'")
 
     __set_candidate_converter(goal, stock)
