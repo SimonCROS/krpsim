@@ -1,6 +1,7 @@
 import copy
 import math
 import random
+import sys
 
 from src.Candidate import Candidate
 from src.Process import Process
@@ -9,11 +10,9 @@ from src.generate_population import is_doable, get_doable_processes, apply_node
 
 
 def __fitness(chromosome: Candidate):
-    if chromosome.stock[-1] == 0:
-        chromosome.fitness = 0
-        return chromosome.fitness
-    chromosome.fitness = chromosome.stock[-1] * \
-        100_000_000 - chromosome.duration
+    chromosome.fitness = 0
+    for i,x in enumerate(chromosome.stock):
+        chromosome.fitness += Candidate.goal[i] * x
     return chromosome.fitness
 
 

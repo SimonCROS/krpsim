@@ -1,3 +1,5 @@
+import sys
+
 class Candidate:
     process: list[int]
     stock: tuple[int]
@@ -5,6 +7,7 @@ class Candidate:
     duration: int
 
     converter: dict[str: int]
+    goal: list[int]
 
     def __init__(self, process: list[int], stock: tuple[int], fitness: int):
         self.process = process
@@ -16,4 +19,4 @@ class Candidate:
         s: list[str] = []
         for key, stock in zip(Candidate.converter, self.stock):
             s.append(f"{key}:{stock}")
-        return f"{len(self.process)} - ({';'.join(s[:-1])}) - ({s[-1]}) - {self.fitness} - {self.duration}"
+        return f"{len(self.process)} - ({';'.join(s)}) - {self.fitness} - {self.duration}"

@@ -1,3 +1,4 @@
+import sys
 import argparse as a
 
 import src.parsing as parser
@@ -5,6 +6,10 @@ import src.parsing as parser
 from src.GeneticSolver import evolve
 from src.generate_population import generate_population
 from src.utils import print_collection, print_cycle
+
+import random
+
+random.seed(10)
 
 if __name__ == '__main__':
     argparse = a.ArgumentParser()
@@ -29,11 +34,11 @@ if __name__ == '__main__':
         argparse.error('[-r] has range(2, 25)')
 
     memoization: dict[tuple: tuple] = {}
-    processes, start, pb_type = parser.parse(args.file)
-    population = generate_population(args, start, processes, pb_type, memoization)
+    processes, start, goal = parser.parse(args.file)
+    population = generate_population(args, start, processes, memoization)
     population = evolve(population, start, processes, args)
     if args.demo:
         print_collection(population)
         print("")
-    print_cycle(population[0], processes, pb_type, start)
+    print_cycle(population[0], processes, len(goal), start)
 

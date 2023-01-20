@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import regex
+import sys
 
 from src.Error import Error
 from src.Candidate import Candidate
@@ -63,33 +64,37 @@ def __convert_resources(resources: dict[str: str] | None) -> tuple[int]:
     return tuple(converter.values())
 
 
-def __set_candidate_converter(goal: set[str], stock: set[str]):
+def __set_candidate_converter(goal_keys: set[str], stock_keys: set[str]):
+    size: int = len(goal_keys)
     converter: dict[str: int] = {}
-    optimize: str = goal.intersection(stock).pop()
-    stock: list[str] = list(stock)
-    stock.remove(optimize)
 
-    for s in stock:
+    for s in stock_keys:
         converter[s] = 0
-    converter[optimize] = 0
 
     Candidate.converter = converter
 
+    goal: list[int] = list(converter.values())
+    for i,k in enumerate(converter.keys()):
+        if k in goal_keys:
+            goal[i] = size
+            size -= 1
+    Candidate.goal = goal
 
-def __get_processes(processes: list[dict]):
-    Processes: list[Process] = []
 
-    for process in processes:
-        Processes.append(Process(
+def __get_processes(data: list[dict]):
+    processes: list[Process] = []
+
+    for process in data:
+        processes.append(Process(
             name=process['name'],
             cost=__convert_resources(process['cost']),
             gain=__convert_resources(process['gain']),
             delay=int(process['delay'])
         ))
-    return Processes
+    return processes
 
 
-def parse(file) -> list[list[Process], Candidate, int]:
+def parse(file) -> list[list[Process], Candidate, tuple[int]]:
     content = __get_file_content(file)
     content = map(__remove_comment, content)
     content = filter(None, content)
@@ -126,4 +131,4 @@ def parse(file) -> list[list[Process], Candidate, int]:
     processes = __get_processes(processes)
     start = Candidate([], __convert_resources(start), 0)
 
-    return [processes, start, len(goal)]
+    return [processes, start, goal]

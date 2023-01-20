@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import random
+import sys
 
 from src.Node import Node
 from src.Process import Process
@@ -16,7 +17,6 @@ def is_doable(new_stock: tuple) -> bool:
 def get_doable_processes(candidate: Candidate, processes: list[Process], memoization: dict[tuple[int]: list[Node]] = {}) -> list[Node]:
     if memoization.get(candidate.stock) is not None:
         return memoization[candidate.stock]
-
     doable: list[Node] = []
 
     for i, process in enumerate(processes):
@@ -59,18 +59,19 @@ def __rollback(chromosome: Candidate, processes: list[Process], memoization: dic
     return memoization[chromosome.stock]
 
 
-def generate_population(args, start: Candidate, processes: list[Process], pb_type: int, memoization: dict[tuple[int]: list[Node]]) -> list[Candidate]:
+def generate_population(args, start: Candidate, processes: list[Process], memoization: dict[tuple[int]: list[Node]]) -> list[Candidate]:
     population: list[Candidate] = []
 
-    for p in range(args.population):
+    for _ in range(args.population):
         chromosome = copy.deepcopy(start)
-        for i in range(args.iterations):
+        print("aaa", file=sys.stderr)
+        for _ in range(args.iterations):
+            print("bbb", file=sys.stderr)
             doable = get_doable_processes(chromosome, processes, memoization)
             if not doable:
-                if pb_type == 2:
-                    break
                 doable = __rollback(chromosome, processes, memoization)
-            apply_node(chromosome, random.choice(doable))
+            app: Node = random.choice(doable);
+            apply_node(chromosome, app)
         population.append(chromosome)
 
     return population
