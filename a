@@ -1,0 +1,26 @@
+
+	5 processes, 6 stocks, 1 to optimize
+
+	0:do_etagere          11
+	10:do_montant         10
+	25:do_montant         9
+	40:do_etagere         8
+	50:do_etagere         7
+	60:do_table_ikea      7
+	90:do_montant         6
+	105:do_etagere        5
+	115:do_fond           3
+	135:do_etagere        2
+	145:do_montant        1
+	160:do_etagere        0
+	170:do_table_ikea     0
+
+	No more process doable at time 201
+
+	Stock:
+	 - armoire => 0
+	 - etagere => 0
+	 - fond => 1
+	 - montant => 0
+	 - planche => 0
+	 - table => 2

@@ -64,12 +64,11 @@ def generate_population(args, start: Candidate, processes: list[Process], memoiz
 
     for _ in range(args.population):
         chromosome = copy.deepcopy(start)
-        print("aaa", file=sys.stderr)
         for _ in range(args.iterations):
-            print("bbb", file=sys.stderr)
             doable = get_doable_processes(chromosome, processes, memoization)
             if not doable:
-                doable = __rollback(chromosome, processes, memoization)
+                break;
+                # doable = __rollback(chromosome, processes, memoization)
             app: Node = random.choice(doable);
             apply_node(chromosome, app)
         population.append(chromosome)

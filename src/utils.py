@@ -12,7 +12,7 @@ def print_collection(collection: list[Candidate | Process]):
 
 def print_stock(stock: tuple[int]):
     print("\tStock:")
-    for key, stock in zip(Candidate.converter, stock):
+    for key, stock in sorted(zip(Candidate.converter, stock), key=lambda x: x[0]):
         print(f"\t - {key} => {stock}")
 
 
