@@ -1,5 +1,6 @@
 import sys
 
+
 class Candidate:
     process: list[int]
     stock: tuple[int]

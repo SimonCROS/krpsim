@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import copy
 import random
-import sys
 
+from src.Candidate import Candidate
 from src.Node import Node
 from src.Process import Process
-from src.Candidate import Candidate
-from src.utils import tup_sub, tup_add
+from src.utils import tup_add, tup_sub
 
 
 def is_doable(new_stock: tuple) -> bool:
@@ -23,7 +22,8 @@ def get_doable_processes(candidate: Candidate, processes: list[Process], memoiza
         new_stock = tup_sub(candidate.stock, process.cost)
         if is_doable(new_stock):
             # here we stock the index of the process and the new value of the stock to not recalculate it in the future
-            doable.append(Node(i, tup_add(new_stock, process.gain), process.delay))
+            doable.append(
+                Node(i, tup_add(new_stock, process.gain), process.delay))
     memoization[candidate.stock] = doable
     return doable
 
@@ -37,6 +37,8 @@ def apply_node(chromosome: Candidate, node: Node):
 """
 Rewind to the previous step for the chromosome, and returns if there are other possibilities avaliables.
 """
+
+
 def __rewind(chromosome: Candidate, processes: list[Process], memoization: dict[tuple[int]: list[Node]]) -> int:
     last_process_id = chromosome.process.pop()
     chromosome.stock = tup_add(
@@ -68,7 +70,7 @@ def generate_population(args, start: Candidate, processes: list[Process], memoiz
             doable = get_doable_processes(chromosome, processes, memoization)
             if not doable:
                 doable = __rollback(chromosome, processes, memoization)
-            app: Node = random.choice(doable);
+            app: Node = random.choice(doable)
             apply_node(chromosome, app)
         population.append(chromosome)
 

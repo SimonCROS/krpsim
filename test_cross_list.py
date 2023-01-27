@@ -11,8 +11,9 @@ split_1_at = random.randint(0, amount1)
 split_2_b = random.randint(0, len_b)
 cross_len = len_a - amount1
 
-crossed = l1[:split_1_at];
-crossed += l2[max(0, min(split_2_b, len_b - cross_len)):min(len_b, split_2_b + cross_len)]
+crossed = l1[:split_1_at]
+crossed += l2[max(0, min(split_2_b, len_b - cross_len))
+                  :min(len_b, split_2_b + cross_len)]
 crossed += l1[split_1_at + cross_len:]
 
 for s in list(((("\033[32m" if i < 10 else "\033[33m") + str(i)) for i in crossed)):

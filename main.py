@@ -1,24 +1,27 @@
-import sys
 import argparse as a
+import random
 
 import src.parsing as parser
-
-from src.GeneticSolver import evolve
 from src.generate_population import generate_population
+from src.GeneticSolver import evolve
 from src.utils import print_collection, print_cycle
-
-import random
 
 # random.seed(10)
 
 if __name__ == '__main__':
     argparse = a.ArgumentParser()
-    argparse.add_argument("-f", "--file", help="file containing the optimization problem", required=True)
-    argparse.add_argument("-p", "--population", default=26, type=int, help="population size")
-    argparse.add_argument("-i", "--iterations", default=1000, type=int, help="maximum iterations while generating a chromosome")
-    argparse.add_argument("-g", "--generations", default=10, type=int, help="generations number")
-    argparse.add_argument("-r", "--ratio", default=5, type=int, help="mutation ratio")
-    argparse.add_argument("-d", "--demo", action="store_true", default=False, help="show algo efficiency")
+    argparse.add_argument(
+        "-f", "--file", help="file containing the optimization problem", required=True)
+    argparse.add_argument("-p", "--population", default=26,
+                          type=int, help="population size")
+    argparse.add_argument("-i", "--iterations", default=1000, type=int,
+                          help="maximum iterations while generating a chromosome")
+    argparse.add_argument("-g", "--generations", default=10,
+                          type=int, help="generations number")
+    argparse.add_argument("-r", "--ratio", default=5,
+                          type=int, help="mutation ratio")
+    argparse.add_argument("-d", "--demo", action="store_true",
+                          default=False, help="show algo efficiency")
 
     args = argparse.parse_args()
 
@@ -41,4 +44,3 @@ if __name__ == '__main__':
         print_collection(population)
         print("")
     print_cycle(population[0], processes, len(goal), start)
-

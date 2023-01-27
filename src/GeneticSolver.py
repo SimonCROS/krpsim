@@ -3,14 +3,14 @@ import math
 import random
 
 from src.Candidate import Candidate
+from src.generate_population import apply_node, get_doable_processes, is_doable
 from src.Process import Process
-from src.utils import tup_sub, tup_add, cross_list
-from src.generate_population import is_doable, get_doable_processes, apply_node
+from src.utils import cross_list, tup_add, tup_sub
 
 
 def __fitness(chromosome: Candidate):
     chromosome.fitness = 0
-    for i,x in enumerate(chromosome.stock):
+    for i, x in enumerate(chromosome.stock):
         chromosome.fitness += Candidate.goal[i] * x
     return chromosome.fitness
 
@@ -42,8 +42,11 @@ def __crossover(population: list[Candidate], base: Candidate, processes: list[Pr
         parent_a: Candidate = population[i]
         parent_b: Candidate = population[i + 1]
 
-        population.append(__cross(copy.deepcopy(base), cross_list(parent_a.process, parent_b.process), processes))
-        population.append(__cross(copy.deepcopy(base), cross_list(parent_b.process, parent_a.process), processes))
+        population.append(__cross(copy.deepcopy(base), cross_list(
+            parent_a.process, parent_b.process), processes))
+        population.append(__cross(copy.deepcopy(base), cross_list(
+            parent_b.process, parent_a.process), processes))
+
 
 def __mutate(mutable: Candidate, mutated: Candidate, processes: list[Process], ratio: int, mutation_point) -> Candidate:
     for i in range(0, mutation_point - 1):

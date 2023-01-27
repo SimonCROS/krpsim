@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import copy
-import regex
-import sys
 
-from src.Error import Error
+import regex
+
 from src.Candidate import Candidate
+from src.Error import Error
 from src.Process import Process
 
 
@@ -74,7 +74,7 @@ def __set_candidate_converter(goal_keys: set[str], stock_keys: set[str]):
     Candidate.converter = converter
 
     goal: list[int] = list(converter.values())
-    for i,k in enumerate(converter.keys()):
+    for i, k in enumerate(converter.keys()):
         if k in goal_keys:
             goal[i] = size
             size -= 1

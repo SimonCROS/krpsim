@@ -16,8 +16,9 @@ def cross_list(l1: list, l2: list):
     split_2_b = random.randint(0, len_b)
     cross_len = len_a - amount1
 
-    crossed = l1[:split_1_at];
-    crossed += l2[max(0, min(split_2_b, len_b - cross_len)):min(len_b, split_2_b + cross_len)]
+    crossed = l1[:split_1_at]
+    crossed += l2[max(0, min(split_2_b, len_b - cross_len))
+                      :min(len_b, split_2_b + cross_len)]
     crossed += l1[split_1_at + cross_len:]
 
     return crossed
