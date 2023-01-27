@@ -1,26 +1,48 @@
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+10 - (fond:2;montant:0;planche:0;etagere:8;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+10 - (fond:2;montant:0;planche:0;etagere:8;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+9 - (fond:3;montant:0;planche:0;etagere:6;table:0;armoire:0) - 12 - 120
+10 - (fond:2;montant:0;planche:0;etagere:8;table:0;armoire:0) - 12 - 120
+9 - (fond:3;montant:0;planche:0;etagere:6;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+9 - (fond:3;montant:0;planche:0;etagere:6;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+7 - (fond:5;montant:0;planche:0;etagere:2;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+10 - (fond:2;montant:0;planche:0;etagere:8;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+10 - (fond:2;montant:0;planche:0;etagere:8;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+8 - (fond:4;montant:0;planche:0;etagere:4;table:0;armoire:0) - 12 - 120
+9 - (fond:3;montant:0;planche:0;etagere:6;table:0;armoire:0) - 12 - 120
+9 - (fond:3;montant:0;planche:0;etagere:6;table:0;armoire:0) - 12 - 120
+9 - (fond:3;montant:0;planche:0;etagere:6;table:0;armoire:0) - 12 - 120
+9 - (fond:3;montant:0;planche:0;etagere:6;table:0;armoire:0) - 12 - 120
+
 
 	5 processes, 6 stocks, 1 to optimize
 
-	0:do_etagere          11
-	10:do_montant         10
-	25:do_montant         9
-	40:do_etagere         8
-	50:do_etagere         7
-	60:do_table_ikea      7
-	90:do_montant         6
-	105:do_etagere        5
-	115:do_fond           3
-	135:do_etagere        2
-	145:do_montant        1
-	160:do_etagere        0
-	170:do_table_ikea     0
+	0:do_fond
+	20:do_fond
+	40:do_etagere
+	50:do_fond
+	70:do_etagere
+	80:do_fond
+	100:do_etagere
+	110:do_etagere
 
-	No more process doable at time 201
+	No more process doable at time 121
 
 	Stock:
 	 - armoire => 0
-	 - etagere => 0
-	 - fond => 1
+	 - etagere => 4
+	 - fond => 4
 	 - montant => 0
 	 - planche => 0
-	 - table => 2
+	 - table => 0

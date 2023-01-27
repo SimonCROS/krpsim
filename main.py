@@ -9,7 +9,7 @@ from src.utils import print_collection, print_cycle
 
 import random
 
-random.seed(10)
+# random.seed(10)
 
 if __name__ == '__main__':
     argparse = a.ArgumentParser()

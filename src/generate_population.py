@@ -67,8 +67,7 @@ def generate_population(args, start: Candidate, processes: list[Process], memoiz
         for _ in range(args.iterations):
             doable = get_doable_processes(chromosome, processes, memoization)
             if not doable:
-                break;
-                # doable = __rollback(chromosome, processes, memoization)
+                doable = __rollback(chromosome, processes, memoization)
             app: Node = random.choice(doable);
             apply_node(chromosome, app)
         population.append(chromosome)
