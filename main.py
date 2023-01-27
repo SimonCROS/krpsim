@@ -1,5 +1,4 @@
 import argparse as a
-import random
 
 import src.parsing as parser
 from src.generate_population import generate_population
@@ -37,10 +36,10 @@ if __name__ == '__main__':
         argparse.error('[-r] has range(2, 25)')
 
     memoization: dict[tuple: tuple] = {}
-    processes, start, goal = parser.parse(args.file)
-    population = generate_population(args, start, processes, memoization)
-    population = evolve(population, start, processes, args)
+    processes, base, goal = parser.parse(args.file)
+    population = generate_population(args, base, processes, memoization)
+    population = evolve(population, base, processes, args)
     if args.demo:
         print_collection(population)
         print("")
-    print_cycle(population[0], processes, len(goal), start)
+    print_cycle(population[0], processes, len(goal), base)

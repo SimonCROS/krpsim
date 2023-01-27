@@ -45,11 +45,11 @@ def print_cycle(chromosome: Candidate, processes: list[Process], pb_type: int, s
     if pb_type == 1:
         if chromosome.stock[-1] <= start.stock[-1]:
             print(
-                f"\n\tSustainable system not obtained, try to increase iterations [-i]. Stopped at time {duration + 1}\n")
+                f"\n\tSustainable system not obtained, try to increase iterations [-i]. Stopped at time {duration}\n")
         else:
-            print(f"\n\tSustainable system stopped at time {duration + 1}\n")
+            print(f"\n\tSustainable system stopped at time {duration}\n")
     else:
-        print(f"\n\tNo more process doable at time {duration + 1}\n")
+        print(f"\n\tNo more process doable at time {duration}\n")
     print_stock(chromosome.stock)
 
 
