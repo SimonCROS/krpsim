@@ -35,21 +35,20 @@ def print_stock(stock: tuple[int]):
         print(f"\t - {key} => {stock}")
 
 
-def print_cycle(chromosome: Candidate, processes: list[Process], pb_type: int, start: Candidate):
+def print_cycle(chromosome: Candidate, processes: list[Process], stop_type: int):
     duration = 0
     print(
         f"\n\t{len(processes)} processes, {len(chromosome.stock)} stocks, 1 to optimize\n")
     for i in chromosome.process:
         print(f"\t{duration}:{processes[i].name}")
         duration += processes[i].delay
-    if pb_type == 1:
-        if chromosome.stock[-1] <= start.stock[-1]:
-            print(
-                f"\n\tSustainable system not obtained, try to increase iterations [-i]. Stopped at time {duration}\n")
-        else:
-            print(f"\n\tSustainable system stopped at time {duration}\n")
-    else:
-        print(f"\n\tNo more process doable at time {duration}\n")
+    match stop_type:
+        case 1:
+            print(f"\n\tMaximum amount of generations reached at time {duration}\n")
+        case 2:
+            print(f"\n\tNo more process doable at time {duration}\n")
+        case 3:
+            print(f"\n\tMaximum execution time reached at time {duration}\n")
     print_stock(chromosome.stock)
 
 

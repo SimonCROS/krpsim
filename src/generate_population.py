@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import random
+import time
 
 from src.Candidate import Candidate
 from src.Node import Node
@@ -61,17 +62,25 @@ def __rollback(chromosome: Candidate, processes: list[Process], memoization: dic
     return memoization[chromosome.stock]
 
 
-def generate_population(args, start: Candidate, processes: list[Process], memoization: dict[tuple[int]: list[Node]]) -> list[Candidate]:
+def generate_population(args, base: Candidate, processes: list[Process], memoization: dict[tuple[int]: list[Node]], start: float) -> list[Candidate]:
     population: list[Candidate] = []
+    i = 0
 
     for _ in range(args.population):
-        chromosome = copy.deepcopy(start)
+        chromosome = copy.deepcopy(base)
         for _ in range(args.iterations):
             doable = get_doable_processes(chromosome, processes, memoization)
             if not doable:
                 doable = __rollback(chromosome, processes, memoization)
             app: Node = random.choice(doable)
             apply_node(chromosome, app)
+
+            if i % 1000 == 0:
+                delta = time.time() - start
+                if delta >= args.delay:
+                    return population
+
+            i += 1
         population.append(chromosome)
 
     return population

@@ -30,7 +30,7 @@ def __get_file_content(file: str) -> list[str]:
     return lines
 
 
-def __to_resources(item: str, stock: set) -> dict[str: int]:
+def __to_resources(item: str, stock: list[int]) -> dict[str: int]:
     if not item:
         return []
     resources: dict[str: int] = {}
@@ -45,7 +45,7 @@ def __to_resources(item: str, stock: set) -> dict[str: int]:
             Error.throw(Error.FAIL, Error.FILE_FORMAT_ERROR,
                         f"file format error: resource bad format (`key:value` required) : '{part}' in '({item})'")
         resources[kv[0]] = kv[1]
-        stock.add(kv[0])
+        stock.append(kv[0])
     return resources
 
 
@@ -64,7 +64,7 @@ def __convert_resources(resources: dict[str: str] | None) -> tuple[int]:
     return tuple(converter.values())
 
 
-def __set_candidate_converter(goal_keys: set[str], stock_keys: set[str]):
+def __set_candidate_converter(goal_keys: list[str], stock_keys: list[str]):
     size: int = len(goal_keys)
     converter: dict[str: int] = {}
 
@@ -73,10 +73,16 @@ def __set_candidate_converter(goal_keys: set[str], stock_keys: set[str]):
 
     Candidate.converter = converter
 
+    keys: list[str] = list(converter.keys())
     goal: list[int] = list(converter.values())
-    for i, k in enumerate(converter.keys()):
-        if k in goal_keys:
+    for k in goal_keys:
+        i = k in keys
+        try:
+            i = keys.index(k)
             goal[i] = size
+        except:
+            pass
+        finally:
             size -= 1
     Candidate.goal = goal
 
@@ -99,15 +105,15 @@ def parse(file) -> list[list[Process], Candidate, tuple[int]]:
     content = map(__remove_comment, content)
     content = filter(None, content)
 
-    stock: set[str] = set()
-    goal: set[str] = set()
+    stock: list[str] = list()
+    goal: list[str] = list()
     start: dict[str: str] = {}
     processes: list[dict] = []
 
     for item in content:
         result = regex.search(r"^([^:]+):(\d+)$", item)
         if result:
-            stock.add(result.group(1))
+            stock.append(result.group(1))
             start[result.group(1)] = result.group(2)
         else:
             result = regex.search(
@@ -122,7 +128,7 @@ def parse(file) -> list[list[Process], Candidate, tuple[int]]:
             else:
                 result = regex.search(r"^([^:]+):((?=\()[^)]*\))$", item)
                 if result:
-                    goal.update(result.group(2)[1:-1].split(';'))
+                    goal = result.group(2)[1:-1].split(';')
                 else:
                     Error.throw(Error.FAIL, Error.FILE_FORMAT_ERROR,
                                 f"file format error: unknown patterm : '{item}'")
@@ -130,5 +136,8 @@ def parse(file) -> list[list[Process], Candidate, tuple[int]]:
     __set_candidate_converter(goal, stock)
     processes = __get_processes(processes)
     start = Candidate([], __convert_resources(start), 0)
+
+    import sys
+    print(list(zip(Candidate.converter.keys(), Candidate.goal)), file=sys.stderr)
 
     return [processes, start, goal]

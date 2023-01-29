@@ -1,6 +1,7 @@
 import copy
 import math
 import random
+import time
 
 from src.Candidate import Candidate
 from src.generate_population import apply_node, get_doable_processes, is_doable
@@ -26,7 +27,7 @@ def __do_process(chromosome: Candidate, new_stock: tuple, process: Process, proc
     chromosome.duration += process.delay
 
 
-def __cross(chromosome: Candidate, processes_list: list[int], processes: list[Process]) -> Candidate:
+def __apply_processes(chromosome: Candidate, processes_list: list[int], processes: list[Process]) -> Candidate:
     for p in processes_list:
         new_stock = tup_sub(chromosome.stock, processes[p].cost)
         if not is_doable(new_stock):
@@ -35,16 +36,16 @@ def __cross(chromosome: Candidate, processes_list: list[int], processes: list[Pr
     return chromosome
 
 
-def __crossover(population: list[Candidate], base: Candidate, processes: list[Process]):
-    size: range = range(int(len(population) / 2))
+def __cross(population: list[Candidate], base: Candidate, processes: list[Process]):
+    size: range = range(len(population) - 1)
 
     for i in size:
         parent_a: Candidate = population[i]
         parent_b: Candidate = population[i + 1]
 
-        population.append(__cross(copy.deepcopy(base), cross_list(
+        population.append(__apply_processes(copy.deepcopy(base), cross_list(
             parent_a.process, parent_b.process), processes))
-        population.append(__cross(copy.deepcopy(base), cross_list(
+        population.append(__apply_processes(copy.deepcopy(base), cross_list(
             parent_b.process, parent_a.process), processes))
 
 
@@ -70,24 +71,28 @@ def __mutate(mutable: Candidate, mutated: Candidate, processes: list[Process], r
 
 
 def __mutation(population: list[Candidate], base: Candidate, processes: list[Process], args) -> list[Candidate]:
-    for i in range(args.population, args.population * 2):
+    for i, candidate in enumerate(population):
         ratio: int = math.floor(
-            len(population[i].process) * (random.choice(range(1, args.ratio)) / 100))
+            len(candidate.process) * (random.choice(range(1, args.ratio)) / 100))
         if ratio == 0:
             continue
         mutation_point: int = random.choice(
-            range(0, len(population[i].process) - ratio - 1))
+            range(0, len(candidate.process) - ratio - 1))
         mutated: Candidate = copy.deepcopy(base)
 
         population[i] = __mutate(
-            population[i], mutated, processes, ratio, mutation_point)
+            candidate, mutated, processes, ratio, mutation_point)
 
 
-def evolve(population: list[Candidate], base: Candidate, processes: list[Process], args) -> list[Candidate]:
+def evolve(population: list[Candidate], base: Candidate, processes: list[Process], start: float, args) -> list[Candidate]:
     population = __select_chromosomes(population, args.population)
 
     for i in range(args.generations):
-        __crossover(population, base, processes)
+        __cross(population, base, processes)
         __mutation(population, base, processes, args)
         population = __select_chromosomes(population, args.population)
+
+        delta = time.time() - start
+        if delta >= args.delay:
+            break
     return population
