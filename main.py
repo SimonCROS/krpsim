@@ -53,6 +53,8 @@ if __name__ == '__main__':
 
     stop_type = 1
 
+    # todo STOP_TIME 2
+
     delta = time.time() - start
     if delta >= args.delay:
         stop_type = 3
