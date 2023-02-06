@@ -9,16 +9,14 @@ from src.Process import Process
 from src.utils import cross_list, tup_add, tup_sub
 
 
-def __fitness(chromosome: Candidate):
-    chromosome.fitness = 0
-    for i, x in enumerate(chromosome.stock):
-        chromosome.fitness += Candidate.goal[i] * x
-    return chromosome.fitness
-
-
-def __select_chromosomes(population: list[Candidate], population_size: int) -> list[Candidate]:
+def __select_chromosomes(population: list[Candidate], population_size: int, opti_time: bool) -> list[Candidate]:
     # we are performing elitism when sorting population and children obtained by crossover
-    return sorted(population, key=lambda chromosome: __fitness(chromosome), reverse=True)[:population_size]
+    for chromosome in population:
+        chromosome.calc_fitness()
+        if opti_time and chromosome.duration > 0 and len(chromosome.process) > 0:
+            chromosome.fitness *= Process.max_delay / (chromosome.duration / len(chromosome.process))
+
+    return sorted(population, key=lambda chromosome: chromosome.fitness, reverse=True)[:population_size]
 
 
 def __do_process(chromosome: Candidate, new_stock: tuple, process: Process, process_nb):
@@ -84,13 +82,13 @@ def __mutation(population: list[Candidate], base: Candidate, processes: list[Pro
             candidate, mutated, processes, ratio, mutation_point)
 
 
-def evolve(population: list[Candidate], base: Candidate, processes: list[Process], start: float, args) -> list[Candidate]:
-    population = __select_chromosomes(population, args.population)
+def evolve(population: list[Candidate], base: Candidate, processes: list[Process], start: float, opti_time: bool, args) -> list[Candidate]:
+    population = __select_chromosomes(population, args.population, opti_time)
 
-    for i in range(args.generations):
+    for _ in range(args.generations):
         __cross(population, base, processes)
         __mutation(population, base, processes, args)
-        population = __select_chromosomes(population, args.population)
+        population = __select_chromosomes(population, args.population, opti_time)
 
         delta = time.time() - start
         if delta >= args.delay:

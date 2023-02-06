@@ -50,6 +50,7 @@ def print_cycle(chromosome: Candidate, processes: list[Process], stop_type: int)
         case 3:
             print(f"\n\tMaximum execution time reached at time {duration}\n")
     print_stock(chromosome.stock)
+    print(f"\n\tPoints: {chromosome.calc_fitness()}")
 
 
 def tup_sub(a: tuple[int], b: tuple[int]) -> tuple[int]:

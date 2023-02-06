@@ -4,7 +4,7 @@ import sys
 class Candidate:
     process: list[int]
     stock: tuple[int]
-    fitness: int
+    fitness: float
     duration: int
 
     converter: dict[str: int]
@@ -21,3 +21,9 @@ class Candidate:
         for key, stock in zip(Candidate.converter, self.stock):
             s.append(f"{key}:{stock}")
         return f"{len(self.process)} - ({';'.join(s)}) - {self.fitness} - {self.duration}"
+
+    def calc_fitness(self):
+        self.fitness = 0
+        for i, x in enumerate(self.stock):
+            self.fitness += Candidate.goal[i] * x
+        return self.fitness
