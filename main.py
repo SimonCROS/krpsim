@@ -6,7 +6,7 @@ import src.parsing as parser
 from src.Candidate import Candidate
 from src.generate_population import generate_population
 from src.GeneticSolver import evolve
-from src.utils import print_collection, print_cycle
+from src.print import print_collection, print_cycle
 
 random.seed(10)
 
@@ -45,7 +45,8 @@ if __name__ == '__main__':
     memoization: dict[tuple: tuple] = {}
     processes, base, goal = parser.parse(args.file)
     population = generate_population(args, base, processes, memoization, start)
-    population = evolve(population, base, processes, start, "time" in goal, args)
+    population = evolve(population, base, processes,
+                        start, "time" in goal, args)
 
     if args.demo:
         print_collection(population)

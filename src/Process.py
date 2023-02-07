@@ -1,7 +1,5 @@
-from src.Candidate import Candidate
-
-
 class Process:
+    id: int
     name: str
     cost: tuple[int]
     gain: tuple[int]
@@ -9,7 +7,8 @@ class Process:
 
     max_delay: int = 0
 
-    def __init__(self, name: str, cost: tuple[int], gain: tuple[int], delay: int):
+    def __init__(self, id: int, name: str, cost: tuple[int], gain: tuple[int], delay: int):
+        self.id = id
         self.name = name
         self.cost = cost
         self.gain = gain
@@ -17,14 +16,3 @@ class Process:
 
         if self.delay > Process.max_delay:
             Process.max_delay = self.delay
-
-    def __str__(self):
-        c: list[str] = []
-        g: list[str] = []
-
-        for key, cost, gain in zip(Candidate.converter, self.cost, self.gain):
-            if cost:
-                c.append(f"{key}:{str(cost)}")
-            if gain:
-                g.append(f"{key}:{str(gain)}")
-        return " - ".join([self.name, f'cost: ({";".join(c)})', f'gain: ({";".join(g)})', str(self.delay)])

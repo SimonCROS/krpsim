@@ -92,6 +92,7 @@ def __get_processes(data: list[dict]):
 
     for process in data:
         processes.append(Process(
+            id=len(processes),
             name=process['name'],
             cost=__convert_resources(process['cost']),
             gain=__convert_resources(process['gain']),
@@ -100,7 +101,7 @@ def __get_processes(data: list[dict]):
     return processes
 
 
-def parse(file) -> list[list[Process], Candidate, tuple[int]]:
+def parse(file) -> tuple[list[Process], Candidate, tuple[int]]:
     content = __get_file_content(file)
     content = map(__remove_comment, content)
     content = filter(None, content)
@@ -140,4 +141,4 @@ def parse(file) -> list[list[Process], Candidate, tuple[int]]:
     import sys
     print(list(zip(Candidate.converter.keys(), Candidate.goal)), file=sys.stderr)
 
-    return [processes, start, goal]
+    return (processes, start, goal)
