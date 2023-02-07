@@ -18,7 +18,7 @@ def cross_list(l1: list, l2: list):
 
     crossed = l1[:split_1_at]
     crossed += l2[max(0, min(split_2_b, len_b - cross_len))
-                      :min(len_b, split_2_b + cross_len)]
+                  :min(len_b, split_2_b + cross_len)]
     crossed += l1[split_1_at + cross_len:]
 
     return crossed
@@ -37,11 +37,18 @@ def print_stock(stock: tuple[int]):
 
 def print_cycle(chromosome: Candidate, processes: list[Process], stop_type: int):
     duration = 0
+
     print(
         f"\n\t{len(processes)} processes, {len(chromosome.stock)} stocks, 1 to optimize\n")
-    for i in chromosome.process:
-        print(f"\t{duration}:{processes[i].name}")
-        duration += processes[i].delay
+
+    with open("output.txt", 'w') as f:
+        for i in chromosome.process:
+            output = f"{duration}:{processes[i].name}\n"
+            f.write(output)
+            print(f"\t{output}", end='')
+            duration += processes[i].delay
+        f.write(f"{duration}:end")
+
     match stop_type:
         case 1:
             print(f"\n\tMaximum amount of generations reached at time {duration}\n")
