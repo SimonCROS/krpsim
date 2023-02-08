@@ -1,33 +1,41 @@
 from __future__ import annotations
 
+import copy
 import random
 from src.Process import Process
 from src.utils import tup_add, tup_sub
 
 
-class Candidate:
+CHANGE_RATIO = 0.1
+
+import sys
+
+class Chromosome:
     process: list[int]
     stock: tuple[int]
     fitness: float
     duration: int
+    process_count: int
 
     converter: dict[str: int]
     goal: list[int]
 
-    def cross(c1: Candidate, c2: Candidate, processes: list[Process]) -> list[int]:
-        result = []
+    def cross(base: Chromosome, c1: Chromosome, c2: Chromosome, processes: list[Process]) -> list[int]:
+        global CHANGE_RATIO
+
         max_fill = len(processes) - 1
+        result = copy.deepcopy(base)
 
         for a, b in zip(c1.process, c2.process):
             r = random.random()
 
-            if r >= 0.90 or (a < 0 and b < 0):
-                result.append(random.randint(0, max_fill))
-
-            if r < 0.45 or b < 0:
-                result.append(a)
+            if r >= 1 - CHANGE_RATIO or (a < 0 and b < 0):
+                id = random.randint(0, max_fill)
+            elif (r < (1 - CHANGE_RATIO / 2) and a >= 0) or b < 0:
+                id = a
             else:
-                result.append(b)
+                id = b
+            result.try_do_process(processes[id])
 
         return result
 
@@ -36,17 +44,18 @@ class Candidate:
         self.stock = stock
         self.fitness = fitness
         self.duration = 0
+        self.process_count = 0
 
     def __str__(self):
         s: list[str] = []
-        for key, stock in zip(Candidate.converter, self.stock):
+        for key, stock in zip(Chromosome.converter, self.stock):
             s.append(f"{key}:{stock}")
-        return f"{len(self.process)} - ({';'.join(s)}) - {self.fitness} - {self.duration}"
+        return f"({';'.join(s)}) - {self.fitness} - {self.duration}"
 
     def calc_fitness(self):
         self.fitness = 0
         for i, x in enumerate(self.stock):
-            self.fitness += Candidate.goal[i] * x
+            self.fitness += Chromosome.goal[i] * x
         return self.fitness
 
     def try_do_process(self, process: Process) -> bool:
@@ -57,4 +66,5 @@ class Candidate:
         self.process.append(process.id)
         self.stock = tup_add(tmp, process.gain)
         self.duration += process.delay
+        self.process_count += 1
         return True

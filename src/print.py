@@ -1,21 +1,21 @@
 from __future__ import annotations
 
-from src.Candidate import Candidate
+from src.Chromosome import Chromosome
 from src.Process import Process
 
 
-def print_collection(collection: list[Candidate | Process]):
+def print_collection(collection: list[Chromosome | Process]):
     for elem in collection:
         print(elem)
 
 
 def print_stock(stock: tuple[int]):
     print("\tStock:")
-    for key, stock in sorted(zip(Candidate.converter, stock), key=lambda x: x[0]):
+    for key, stock in sorted(zip(Chromosome.converter, stock), key=lambda x: x[0]):
         print(f"\t - {key} => {stock}")
 
 
-def print_cycle(chromosome: Candidate, processes: list[Process], stop_type: int):
+def print_cycle(chromosome: Chromosome, processes: list[Process], stop_type: int):
     duration = 0
     print(
         f"\n\t{len(processes)} processes, {len(chromosome.stock)} stocks, 1 to optimize\n")

@@ -3,13 +3,11 @@ import random
 import time
 
 import src.parsing as parser
-from src.Candidate import Candidate
 from src.generate_population import generate_population
 from src.GeneticSolver import evolve
 from src.print import print_collection, print_cycle
 
 random.seed(10)
-
 
 if __name__ == '__main__':
     argparse = a.ArgumentParser()
@@ -33,8 +31,8 @@ if __name__ == '__main__':
         argparse.error('[-p] has range(2, 1000)')
     elif args.iterations < 2 or args.iterations > 1_000_000:
         argparse.error('[-i] has range(2, 1 000 000)')
-    elif args.generations < 1 or args.generations > 100:
-        argparse.error('[-g] has range(1, 100)')
+    elif args.generations < 1 or args.generations > 100000:
+        argparse.error('[-g] has range(1, 100000)')
     elif args.ratio < 2 or args.ratio > 25:
         argparse.error('[-r] has range(2, 25)')
     elif args.delay < 1:
@@ -42,11 +40,9 @@ if __name__ == '__main__':
 
     start = time.time()
 
-    memoization: dict[tuple: tuple] = {}
     processes, base, goal = parser.parse(args.file)
-    population = generate_population(args, base, processes, memoization, start)
-    population = evolve(population, base, processes,
-                        start, "time" in goal, args)
+    population = generate_population(base, processes, start, args)
+    population = evolve(population, base, processes, start, "time" in goal, args)
 
     if args.demo:
         print_collection(population)

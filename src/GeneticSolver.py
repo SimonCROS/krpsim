@@ -1,84 +1,50 @@
-import copy
-import math
 import random
 import time
 
-from src.Candidate import Candidate
+from src.Chromosome import Chromosome
 from src.Process import Process
-from src.utils import tup_sub
 
+import sys
 
-def __select_chromosomes(population: list[Candidate], population_size: int, opti_time: bool) -> list[Candidate]:
+def __sort(population: list[Chromosome], opti_time: bool):
     # we are performing elitism when sorting population and children obtained by crossover
     for chromosome in population:
         chromosome.calc_fitness()
         if opti_time and chromosome.duration > 0 and len(chromosome.process) > 0:
-            chromosome.fitness *= Process.max_delay / \
-                (chromosome.duration / len(chromosome.process))
-
-    return sorted(population, key=lambda chromosome: chromosome.fitness, reverse=True)[:population_size]
+            chromosome.fitness *= Process.max_delay / (chromosome.duration / chromosome.process_count)
+    population.sort(key=lambda c: c.fitness, reverse=True)
 
 
-def __apply_processes(chromosome: Candidate, processes_list: list[int], processes: list[Process]) -> Candidate:
+def __apply_processes(chromosome: Chromosome, processes_list: list[int], processes: list[Process]) -> Chromosome:
     for p in processes_list:
         chromosome.try_do_process(processes[p])
     return chromosome
 
 
-def __cross(population: list[Candidate], base: Candidate, processes: list[Process]):
-    size: range = range(len(population) - 1)
+def __cross(population: list[Chromosome], base: Chromosome, processes: list[Process]) -> list[Chromosome]:
+    size = len(population)
+    keep = round((10*size)/100)
 
-    for i in size:
-        parent_a: Candidate = population[i]
-        parent_b: Candidate = population[i + 1]
+    new_generation = []
+    new_generation.extend(population[:keep])
 
-        population.append(__apply_processes(copy.deepcopy(base), Candidate.cross(parent_a, parent_b, processes), processes))
-        population.append(__apply_processes(copy.deepcopy(base), Candidate.cross(parent_a, parent_b, processes), processes))
+    middle = round(size / 2)
+    for i in range(size - keep):
+        parent_a: Chromosome = random.choice(population[:middle])
+        parent_b: Chromosome = random.choice(population[:middle])
 
-
-# def __mutate(mutable: Candidate, mutated: Candidate, processes: list[Process], ratio: int, mutation_point) -> Candidate:
-#     for i in range(0, mutation_point - 1):
-#         new_stock = tup_sub(mutated.stock, processes[mutable.process[i]].cost)
-#         __do_process(mutated, new_stock,
-#                      processes[mutable.process[i]], mutable.process[i])
-
-#     for i in range(mutation_point, mutation_point + ratio):
-#         doable = get_doable_processes(mutated, processes)
-#         if not doable:
-#             return mutable
-#         apply_node(mutated, random.choice(doable))
-
-#     for i in range(mutation_point + ratio, len(mutable.process)):
-#         new_stock = tup_sub(mutated.stock, processes[mutable.process[i]].cost)
-#         if not is_doable(new_stock):
-#             return mutable
-#         __do_process(mutated, new_stock,
-#                      processes[mutable.process[i]], mutable.process[i])
-#     return mutated
+        new_chromosome = Chromosome.cross(base, parent_a, parent_b, processes)
+        new_generation.append(new_chromosome)
+    return new_generation
 
 
-# def __mutation(population: list[Candidate], base: Candidate, processes: list[Process], args) -> list[Candidate]:
-#     for i, candidate in enumerate(population):
-#         ratio: int = math.floor(
-#             len(candidate.process) * (random.choice(range(1, args.ratio)) / 100))
-#         if ratio == 0:
-#             continue
-#         mutation_point: int = random.choice(
-#             range(0, len(candidate.process) - ratio - 1))
-#         mutated: Candidate = copy.deepcopy(base)
+def evolve(population: list[Chromosome], base: Chromosome, processes: list[Process], start: float, opti_time: bool, args) -> list[Chromosome]:
+    __sort(population, opti_time)
 
-#         population[i] = __mutate(
-#             candidate, mutated, processes, ratio, mutation_point)
-
-
-def evolve(population: list[Candidate], base: Candidate, processes: list[Process], start: float, opti_time: bool, args) -> list[Candidate]:
-    population = __select_chromosomes(population, args.population, opti_time)
-
-    for _ in range(args.generations):
-        __cross(population, base, processes)
-        # __mutation(population, base, processes, args)
-        population = __select_chromosomes(
-            population, args.population, opti_time)
+    for i in range(args.generations):
+        population = __cross(population, base, processes)
+        __sort(population, opti_time)
+        print(f"Completed generation {i}, best {population[0].fitness}", file=sys.stderr)
 
         delta = time.time() - start
         if delta >= args.delay:
