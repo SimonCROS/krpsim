@@ -15,15 +15,9 @@ def __sort(population: list[Chromosome], opti_time: bool):
     population.sort(key=lambda c: c.fitness, reverse=True)
 
 
-def __apply_processes(chromosome: Chromosome, processes_list: list[int], processes: list[Process]) -> Chromosome:
-    for p in processes_list:
-        chromosome.try_do_process(processes[p])
-    return chromosome
-
-
 def __cross(population: list[Chromosome], base: Chromosome, processes: list[Process]) -> list[Chromosome]:
     size = len(population)
-    keep = round((10*size)/100)
+    keep = max(round((10*size)/100), 1)
 
     new_generation = []
     new_generation.extend(population[:keep])
@@ -44,7 +38,7 @@ def evolve(population: list[Chromosome], base: Chromosome, processes: list[Proce
     for i in range(args.generations):
         population = __cross(population, base, processes)
         __sort(population, opti_time)
-        print(f"Completed generation {i}, best {population[0].fitness}", file=sys.stderr)
+        print(f"Completed generation {i}, best {population[0].calc_fitness()}", file=sys.stderr)
 
         delta = time.time() - start
         if delta >= args.delay:

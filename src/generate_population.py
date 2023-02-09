@@ -16,7 +16,7 @@ def generate_population(base: Chromosome, processes: list[Process], start: float
         chromosome = copy.deepcopy(base)
         for _ in range(args.iterations):
             p = random.choice(processes)
-            chromosome.try_do_process(p)
+            chromosome.try_do_process(p, insert_none=True)
 
             if i % 1000 == 0:
                 delta = time.time() - start

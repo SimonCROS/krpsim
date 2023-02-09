@@ -8,8 +8,6 @@ from src.utils import tup_add, tup_sub
 
 CHANGE_RATIO = 0.1
 
-import sys
-
 class Chromosome:
     process: list[int]
     stock: tuple[int]
@@ -35,7 +33,7 @@ class Chromosome:
                 id = a
             else:
                 id = b
-            result.try_do_process(processes[id])
+            result.try_do_process(processes[id], insert_none=True)
 
         return result
 
@@ -58,10 +56,11 @@ class Chromosome:
             self.fitness += Chromosome.goal[i] * x
         return self.fitness
 
-    def try_do_process(self, process: Process) -> bool:
+    def try_do_process(self, process: Process, insert_none: bool = False) -> bool:
         tmp = tup_sub(self.stock, process.cost)
         if min(tmp) < 0:
-            self.process.append(-1)
+            if insert_none:
+                self.process.append(-1)
             return False
         self.process.append(process.id)
         self.stock = tup_add(tmp, process.gain)
