@@ -19,11 +19,17 @@ def print_cycle(chromosome: Chromosome, processes: list[Process], stop_type: int
     duration = 0
     print(
         f"\n\t{len(processes)} processes, {len(chromosome.stock)} stocks, 1 to optimize\n")
-    for i in chromosome.process:
-        if i < 0:
-            continue
-        print(f"\t{duration}:{processes[i].name}")
-        duration += processes[i].delay
+
+    with open("output.txt", 'w') as f:
+        for i in chromosome.process:
+            if i < 0:
+                continue
+            output = f"{duration}:{processes[i].name}\n"
+            f.write(output)
+            print(f"\t{output}", end='')
+            duration += processes[i].delay
+        f.write(f"{duration}:end")
+
     match stop_type:
         case 1:
             print(f"\n\tMaximum amount of generations reached at time {duration}\n")
