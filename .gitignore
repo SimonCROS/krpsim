@@ -1,3 +1,8 @@
+a.txt
+output.txt
+v1.txt
+.nfs*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
