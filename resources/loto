@@ -1,0 +1,7 @@
+moi:1
+piece_pour_gratter_le_ticket:1
+
+travailler:(moi:1):(argent:1;moi:1):1
+jouer_au_loto:(argent:5;moi:1;piece_pour_gratter_le_ticket:1):(moi:1;ticket_perdant:1;piece_pour_gratter_le_ticket:1):1
+
+optimize:(ticket_perdant)
