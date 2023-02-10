@@ -27,9 +27,9 @@ class Chromosome:
         for a, b in zip(c1.processes, c2.processes):
             r = random.random()
 
-            if r >= 1 - CHANGE_RATIO:
+            if r >= 1 - CHANGE_RATIO or (not a and not b):
                 process = processes[random.randint(0, max_fill)]
-            elif r < (1 - CHANGE_RATIO) / 2:
+            elif (r < (1 - CHANGE_RATIO) / 2 and a) or not b:
                 process = a
             else:
                 process = b
@@ -76,10 +76,14 @@ class Chromosome:
         return True
 
     def undo_last_process(self) -> Process | None:
-        if not self.processes:
-            return None
+        while True:
+            if not self.processes:
+                return None
 
-        last_process = self.processes.pop()
+            last_process = self.processes.pop()
+            if last_process:
+                break
+
         tmp = tup_sub(self.stock, last_process.gain)
 
         self.stock = tup_add(tmp, last_process.cost)
@@ -87,3 +91,6 @@ class Chromosome:
         self.process_count -= 1
 
         return last_process
+
+    def fill_processes_to(self, size: int):
+        self.processes.extend([None] * (size - len(self.processes)))
