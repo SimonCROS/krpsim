@@ -37,9 +37,8 @@ if __name__ == '__main__':
 
     start = time.time()
 
-    memoization: dict[tuple: tuple] = {}
     processes, base, goal = parser.parse(args.file)
-    population = generate_population(args, base, processes, memoization, start)
+    population = generate_population(base, processes, start, args)
     population = evolve(population, base, processes, start, "time" in goal, args)
 
     if args.demo:
