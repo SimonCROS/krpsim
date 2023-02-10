@@ -10,7 +10,7 @@ import sys
 CHANGE_RATIO = 0.1
 
 class Chromosome:
-    process: list[int]
+    processes: list[Process | None]
     stock: tuple[int]
     fitness: float
     duration: int
@@ -25,21 +25,21 @@ class Chromosome:
         max_fill = len(processes) - 1
         result = copy.deepcopy(base)
 
-        for a, b in zip(c1.process, c2.process):
+        for a, b in zip(c1.processes, c2.processes):
             r = random.random()
 
             if r >= 1 - CHANGE_RATIO:
-                id = random.randint(0, max_fill)
+                process = processes[random.randint(0, max_fill)]
             elif r < (1 - CHANGE_RATIO) / 2:
-                id = a
+                process = a
             else:
-                id = b
-            result.try_do_process(processes[id], insert_padding=True)
+                process = b
+            result.try_do_process(process, insert_padding=True)
 
         return result
 
     def __init__(self, process: list[int], stock: tuple[int], fitness: int):
-        self.process = process
+        self.processes = process
         self.stock = stock
         self.fitness = fitness
         self.duration = 0
@@ -49,7 +49,7 @@ class Chromosome:
         s: list[str] = []
         for key, stock in zip(Chromosome.converter, self.stock):
             s.append(f"{key}:{stock}")
-        return f"{len(self.process)} - ({';'.join(s)}) - {self.fitness} - {self.duration}"
+        return f"{len(self.processes)} - ({';'.join(s)}) - {self.fitness} - {self.duration}"
 
     def calc_fitness(self):
         self.fitness = 0
@@ -60,16 +60,28 @@ class Chromosome:
     def try_do_process(self, process: Process | None, insert_padding: bool = False) -> bool:
         if not process:
             if insert_padding:
-                self.process.append(-1)
+                self.processes.append(None)
             return False
 
         tmp = tup_sub(self.stock, process.cost)
         if min(tmp) < 0:
             if insert_padding:
-                self.process.append(-1)
+                self.processes.append(None)
             return False
-        self.process.append(process.id)
+
+        self.processes.append(process)
         self.stock = tup_add(tmp, process.gain)
         self.duration += process.delay
         self.process_count += 1
+
         return True
+
+    def undo_last_process(self) -> Process:
+        last_process = self.processes.pop()
+        tmp = tup_sub(self.stock, last_process.gain)
+
+        self.stock = tup_add(tmp, last_process.cost)
+        self.duration -= last_process.delay
+        self.process_count -= 1
+
+        return last_process

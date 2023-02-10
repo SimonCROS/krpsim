@@ -21,13 +21,13 @@ def print_cycle(chromosome: Chromosome, processes: list[Process], stop_type: int
         f"\n\t{len(processes)} processes, {len(chromosome.stock)} stocks, 1 to optimize\n")
 
     with open("output.txt", 'w') as f:
-        for i in chromosome.process:
-            if i < 0:
+        for p in chromosome.processes:
+            if not p:
                 continue
-            output = f"{duration}:{processes[i].name}\n"
+            output = f"{duration}:{p.name}\n"
             f.write(output)
             print(f"\t{output}", end='')
-            duration += processes[i].delay
+            duration += p.delay
         f.write(f"{duration}:end")
 
     match stop_type:

@@ -31,17 +31,10 @@ Rewind to the previous step for the chromosome, and returns if there are other p
 """
 
 
-def __rewind(chromosome: Chromosome, processes: list[Process], memoization: dict[tuple[int]: list[Process]]) -> int:
-    last_process_id = chromosome.process.pop()
-    chromosome.stock = tup_add(
-        tup_sub(chromosome.stock, processes[last_process_id].gain),
-        processes[last_process_id].cost
-    )
-    chromosome.duration -= processes[last_process_id].delay
-    doable_ids = list(process.id for process in memoization[chromosome.stock])
-    last_process_index = doable_ids.index(last_process_id)
-    del memoization[chromosome.stock][last_process_index]
-    return len(doable_ids) - 1
+def __rewind(chromosome: Chromosome, memoization: dict[tuple[int]: list[Process]]) -> int:
+    last_process = chromosome.undo_last_process()
+    memoization[chromosome.stock].remove(last_process)
+    return len(memoization[chromosome.stock])
 
 import sys
 
@@ -53,10 +46,10 @@ def generate_population(args, base: Chromosome, processes: list[Process], memoiz
         chromosome = copy.deepcopy(base)
         for _ in range(args.iterations):
             if not load_doable_processes(chromosome, processes, memoization):
-                doable = __rewind(chromosome, processes, memoization)
+                doable = __rewind(chromosome, memoization)
                 while not doable:
                     del memoization[chromosome.stock]  
-                    doable = __rewind(chromosome, processes, memoization)
+                    doable = __rewind(chromosome, memoization)
             chromosome.try_do_process(random.choice(memoization[chromosome.stock]))
 
             if i % 1000 == 0:

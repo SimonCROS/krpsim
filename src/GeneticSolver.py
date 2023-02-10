@@ -10,8 +10,8 @@ def __select_chromosomes(population: list[Chromosome], population_size: int, opt
     # we are performing elitism when sorting population and children obtained by crossover
     for chromosome in population:
         chromosome.calc_fitness()
-        if opti_time and chromosome.duration > 0 and len(chromosome.process) > 0:
-            chromosome.fitness *= Process.max_delay / (chromosome.duration / len(chromosome.process))
+        if opti_time and chromosome.duration > 0 and len(chromosome.processes) > 0:
+            chromosome.fitness *= Process.max_delay / (chromosome.duration / len(chromosome.processes))
 
     return sorted(population, key=lambda chromosome: chromosome.fitness, reverse=True)[:population_size]
 
