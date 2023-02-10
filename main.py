@@ -23,12 +23,12 @@ if __name__ == '__main__':
 
     args = argparse.parse_args()
 
-    if args.population < 2 or args.population > 1000:
-        argparse.error('[-p] has range(2, 1000)')
-    elif args.iterations < 2 or args.iterations > 1_000_000:
-        argparse.error('[-i] has range(2, 1 000 000)')
-    elif args.generations < 1 or args.generations > 100:
-        argparse.error('[-g] has range(1, 100)')
+    if args.population < 2:
+        argparse.error('[-p] must be greater or equal than 2')
+    elif args.iterations < 2:
+        argparse.error('[-i] must be greater or equal than 2')
+    elif args.generations < 1:
+        argparse.error('[-g] must be greater or equal than 1')
     elif args.delay < 1:
         argparse.error('[-r] must be greater or equal than 1')
 
