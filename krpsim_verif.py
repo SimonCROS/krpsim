@@ -1,11 +1,15 @@
+from __future__ import annotations
+
 import os
 import re
 import argparse as a
 
 import src.parsing as parser
 from src.Error import Error
-from src.Candidate import Candidate
-from src.utils import tup_add, tup_sub, print_stock
+from src.Process import Process
+from src.Chromosome import Chromosome
+from src.utils import tup_add, tup_sub
+from src.print import print_stock
 
 PROCESS_PATTERN = '^\d+:[a-z|A-Z|\d|_]+\n$'
 END_PATTERN = '^\d+:end$'
@@ -39,10 +43,15 @@ def parse_output(file_name: str, processes_names: list[str]) -> list[list[int], 
     return [cycles, processes, end_cycle]
 
 
-def calcul_stock(base: Candidate, processes, processes_names):
+def calcul_stock(base: Chromosome, processes: dict[str, Process], processes_names):
+    i = 0
     for process_name in processes_names:
         base.stock = tup_sub(base.stock, processes[process_name].cost)
+        if min(base.stock) < 0:
+            Error.throw(Error.FAIL, Error.OUTPUT_ERROR,
+                        f"error at line {i}: cannot apply process {process_name}")
         base.stock = tup_add(base.stock, processes[process_name].gain)
+        i += 1
 
 
 def verify_output(processes_verif: dict[str: int], cycles_output: list[int], processes_output: list[str],
@@ -70,7 +79,7 @@ if __name__ == '__main__':
     cycles_output, processes_output, end_cycle = parse_output(args.result_to_verify, list(processes_verif.keys()))
     verify_output(processes_verif, cycles_output, processes_output, end_cycle)
 
-    processes_verif = {process.name: process for process in processes}
+    processes_verif: dict[str, Process] = {process.name: process for process in processes}
     calcul_stock(base, processes_verif, processes_output)
     print_stock(base.stock)
 
