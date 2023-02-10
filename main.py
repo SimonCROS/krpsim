@@ -42,12 +42,5 @@ if __name__ == '__main__':
         print_collection(population)
         print("")
 
-    stop_type = 1
-
-    # todo STOP_TIME 2
-
     delta = time.time() - start
-    if delta >= args.delay:
-        stop_type = 3
-
-    print_cycle(population[0], processes, stop_type)
+    print_cycle(population[0], processes, delta >= args.delay)
