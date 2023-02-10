@@ -1,0 +1,8 @@
+vache:2
+chevre:2
+
+boucle:(vache:2):(vache:2):1
+faire_du_fromage_mixte:(vache:1;chevre:1):(fromage:1):1
+
+optimize:(fromage)
+# optimize:(time;fromage)

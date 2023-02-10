@@ -1,6 +1,0 @@
-vache:2
-
-faire_des_enfants_vache:(vache:2):(vache:3):1
-compter_les_mouches_sur_le_cadavre_de_la_vache:(vache:1):(mouche:50):1
-
-optimize:(mouche)
