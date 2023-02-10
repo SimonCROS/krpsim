@@ -4,7 +4,7 @@ import copy
 
 import regex
 
-from src.Candidate import Candidate
+from src.Chromosome import Chromosome
 from src.Error import Error
 from src.Process import Process
 
@@ -56,7 +56,7 @@ def __remove_comment(line) -> str:
 
 
 def __convert_resources(resources: dict[str: str] | None) -> tuple[int]:
-    converter = copy.deepcopy(Candidate.converter)
+    converter = copy.deepcopy(Chromosome.converter)
 
     if resources:
         for k, v in resources.items():
@@ -71,7 +71,7 @@ def __set_candidate_converter(goal_keys: list[str], stock_keys: list[str]):
     for s in stock_keys:
         converter[s] = 0
 
-    Candidate.converter = converter
+    Chromosome.converter = converter
 
     keys: list[str] = list(converter.keys())
     goal: list[int] = list(converter.values())
@@ -84,23 +84,26 @@ def __set_candidate_converter(goal_keys: list[str], stock_keys: list[str]):
             pass
         finally:
             size -= 1
-    Candidate.goal = goal
+    Chromosome.goal = goal
 
 
 def __get_processes(data: list[dict]):
     processes: list[Process] = []
 
+    i = 0
     for process in data:
         processes.append(Process(
+            id=i,
             name=process['name'],
             cost=__convert_resources(process['cost']),
             gain=__convert_resources(process['gain']),
             delay=int(process['delay'])
         ))
+        i += 1
     return processes
 
 
-def parse(file) -> list[list[Process], Candidate, tuple[int]]:
+def parse(file) -> list[list[Process], Chromosome, tuple[int]]:
     content = __get_file_content(file)
     content = map(__remove_comment, content)
     content = filter(None, content)
@@ -135,9 +138,9 @@ def parse(file) -> list[list[Process], Candidate, tuple[int]]:
 
     __set_candidate_converter(goal, stock)
     processes = __get_processes(processes)
-    start = Candidate([], __convert_resources(start), 0)
+    start = Chromosome([], __convert_resources(start), 0)
 
     import sys
-    print(list(zip(Candidate.converter.keys(), Candidate.goal)), file=sys.stderr)
+    print(list(zip(Chromosome.converter.keys(), Chromosome.goal)), file=sys.stderr)
 
     return [processes, start, goal]

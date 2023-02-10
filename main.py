@@ -1,13 +1,12 @@
 import argparse as a
-import random
 import time
 
 import src.parsing as parser
-from src.Candidate import Candidate
 from src.generate_population import generate_population
 from src.GeneticSolver import evolve
-from src.utils import print_collection, print_cycle
+from src.print import print_collection, print_cycle
 
+import random
 random.seed(10)
 
 

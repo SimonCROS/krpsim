@@ -4,7 +4,7 @@ import copy
 import random
 import time
 
-from src.Candidate import Candidate
+from src.Chromosome import Chromosome
 from src.Node import Node
 from src.Process import Process
 from src.utils import tup_add, tup_sub
@@ -14,7 +14,7 @@ def is_doable(new_stock: tuple) -> bool:
     return min(new_stock) >= 0
 
 
-def get_doable_processes(candidate: Candidate, processes: list[Process], memoization: dict[tuple[int]: list[Node]] = {}) -> list[Node]:
+def get_doable_processes(candidate: Chromosome, processes: list[Process], memoization: dict[tuple[int]: list[Node]] = {}) -> list[Node]:
     if memoization.get(candidate.stock) is not None:
         return memoization[candidate.stock]
     doable: list[Node] = []
@@ -29,7 +29,7 @@ def get_doable_processes(candidate: Candidate, processes: list[Process], memoiza
     return doable
 
 
-def apply_node(chromosome: Candidate, node: Node):
+def apply_node(chromosome: Chromosome, node: Node):
     chromosome.process.append(node.process)
     chromosome.stock = node.stock
     chromosome.duration += node.delay
@@ -40,7 +40,7 @@ Rewind to the previous step for the chromosome, and returns if there are other p
 """
 
 
-def __rewind(chromosome: Candidate, processes: list[Process], memoization: dict[tuple[int]: list[Node]]) -> int:
+def __rewind(chromosome: Chromosome, processes: list[Process], memoization: dict[tuple[int]: list[Node]]) -> int:
     last_process_id = chromosome.process.pop()
     chromosome.stock = tup_add(
         tup_sub(chromosome.stock, processes[last_process_id].gain),
@@ -53,7 +53,7 @@ def __rewind(chromosome: Candidate, processes: list[Process], memoization: dict[
     return len(doable_ids) - 1
 
 
-def __rollback(chromosome: Candidate, processes: list[Process], memoization: dict[tuple[int]: list[Node]]) -> Node:
+def __rollback(chromosome: Chromosome, processes: list[Process], memoization: dict[tuple[int]: list[Node]]) -> Node:
     doable_ids = __rewind(chromosome, processes, memoization)
 
     while not doable_ids:
@@ -62,8 +62,8 @@ def __rollback(chromosome: Candidate, processes: list[Process], memoization: dic
     return memoization[chromosome.stock]
 
 
-def generate_population(args, base: Candidate, processes: list[Process], memoization: dict[tuple[int]: list[Node]], start: float) -> list[Candidate]:
-    population: list[Candidate] = []
+def generate_population(args, base: Chromosome, processes: list[Process], memoization: dict[tuple[int]: list[Node]], start: float) -> list[Chromosome]:
+    population: list[Chromosome] = []
     i = 0
 
     for _ in range(args.population):
