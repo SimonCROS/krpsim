@@ -15,12 +15,6 @@ def __sort(population: list[Chromosome], opti_time: bool):
     population.sort(key=lambda c: c.fitness, reverse=True)
 
 
-def __apply_processes(chromosome: Chromosome, processes_list: list[int], processes: list[Process]) -> Chromosome:
-    for p in processes_list:
-        chromosome.try_do_process(processes[p])
-    return chromosome
-
-
 def __cross(population: list[Chromosome], base: Chromosome, processes: list[Process]) -> list[Chromosome]:
     size = len(population)
     keep = round((10*size)/100)
