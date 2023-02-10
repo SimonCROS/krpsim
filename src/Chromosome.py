@@ -5,9 +5,8 @@ import random
 from src.Process import Process
 from src.utils import tup_add, tup_sub
 
-import sys
-
 CHANGE_RATIO = 0.1
+
 
 class Chromosome:
     processes: list[Process | None]
@@ -76,7 +75,10 @@ class Chromosome:
 
         return True
 
-    def undo_last_process(self) -> Process:
+    def undo_last_process(self) -> Process | None:
+        if not self.processes:
+            return None
+
         last_process = self.processes.pop()
         tmp = tup_sub(self.stock, last_process.gain)
 

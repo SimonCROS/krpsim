@@ -16,5 +16,5 @@ do_table_ikea:(montant:2;etagere:3):(table:1):30
 # or maximize some products over a long delay
 # optimize:(stock1;stock2;...)
 #
-optimize:(armoire;;;;;;;;;;;;;;;fond;etagere)
+optimize:(armoire)
 #

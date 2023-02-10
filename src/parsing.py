@@ -140,7 +140,4 @@ def parse(file) -> list[list[Process], Chromosome, tuple[int]]:
     processes = __get_processes(processes)
     start = Chromosome([], __convert_resources(start), 0)
 
-    import sys
-    print(list(zip(Chromosome.converter.keys(), Chromosome.goal)), file=sys.stderr)
-
     return [processes, start, goal]

@@ -1,6 +1,5 @@
 import random
 import time
-import sys
 
 from src.Chromosome import Chromosome
 from src.Process import Process
@@ -14,6 +13,7 @@ def __select_chromosomes(population: list[Chromosome], population_size: int, opt
             chromosome.fitness *= Process.max_delay / (chromosome.duration / len(chromosome.processes))
 
     return sorted(population, key=lambda chromosome: chromosome.fitness, reverse=True)[:population_size]
+
 
 def __cross(population: list[Chromosome], base: Chromosome, processes: list[Process]) -> list[Chromosome]:
     size = len(population)
@@ -31,14 +31,13 @@ def __cross(population: list[Chromosome], base: Chromosome, processes: list[Proc
         new_generation.append(new_chromosome)
     return new_generation
 
+
 def evolve(population: list[Chromosome], base: Chromosome, processes: list[Process], start: float, opti_time: bool, args) -> list[Chromosome]:
     population = __select_chromosomes(population, args.population, opti_time)
 
-    print(f"Starting generation, best {population[0].calc_fitness()}", file=sys.stderr)
-    for i in range(args.generations):
+    for _ in range(args.generations):
         population = __cross(population, base, processes)
         population = __select_chromosomes(population, args.population, opti_time)
-        print(f"Completed generation {i}, best {population[0].calc_fitness()}", file=sys.stderr)
 
         delta = time.time() - start
         if delta >= args.delay:

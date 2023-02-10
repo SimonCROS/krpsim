@@ -17,8 +17,7 @@ def print_stock(stock: tuple[int]):
 
 def print_cycle(chromosome: Chromosome, processes: list[Process], stop_type: int):
     duration = 0
-    print(
-        f"\n\t{len(processes)} processes, {len(chromosome.stock)} stocks, 1 to optimize\n")
+    print(f"\n\t{len(processes)} processes, {len(chromosome.stock)} stocks, 1 to optimize\n")
 
     with open("output.txt", 'w') as f:
         for p in chromosome.processes:

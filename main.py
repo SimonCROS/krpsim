@@ -6,9 +6,6 @@ from src.generate_population import generate_population
 from src.GeneticSolver import evolve
 from src.print import print_collection, print_cycle
 
-import random
-random.seed(10)
-
 
 if __name__ == '__main__':
     argparse = a.ArgumentParser()
