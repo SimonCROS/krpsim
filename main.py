@@ -21,8 +21,6 @@ if __name__ == '__main__':
                           help="maximum iterations while generating a chromosome")
     argparse.add_argument("-g", "--generations", default=10,
                           type=int, help="generations number")
-    argparse.add_argument("-r", "--ratio", default=5,
-                          type=int, help="mutation ratio")
     argparse.add_argument("-d", "--demo", action="store_true",
                           default=False, help="show algo efficiency")
 
@@ -34,8 +32,6 @@ if __name__ == '__main__':
         argparse.error('[-i] has range(2, 1 000 000)')
     elif args.generations < 1 or args.generations > 100:
         argparse.error('[-g] has range(1, 100)')
-    elif args.ratio < 2 or args.ratio > 25:
-        argparse.error('[-r] has range(2, 25)')
     elif args.delay < 1:
         argparse.error('[-r] must be greater or equal than 1')
 
